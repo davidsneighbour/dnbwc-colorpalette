@@ -15,7 +15,10 @@
         <p class="max-w-3xl text-lg text-slate-600">
           This page loads Tailwind from the CDN and imports only the distributable component bundle from
           <code class="rounded bg-slate-200 px-1 py-0.5 text-sm">./dist/dnb-colorpalette.js</code>.
-          Run <code class="rounded bg-slate-200 px-1 py-0.5 text-sm">npm run build</code> before opening it.
+          Run <code class="rounded bg-slate-200 px-1 py-0.5 text-sm">npm run build</code>, then open this page through
+          <code class="rounded bg-slate-200 px-1 py-0.5 text-sm">npm run serve:test</code> so the module import is
+          loaded over HTTP instead of the file system.
+
         </p>
       </header>
 

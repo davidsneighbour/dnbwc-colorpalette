@@ -185,6 +185,14 @@ Build the distributable module:
 npm run build
 ```
 
+Serve the standalone dist test page over HTTP after building:
+
+```bash
+npm run serve:test
+```
+
+The test page must be served over HTTP because browsers block ES module imports from local `file://` pages.
+
 Run all configured checks:
 
 ```bash
