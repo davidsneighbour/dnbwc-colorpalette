@@ -9,9 +9,10 @@ The component intentionally does not bundle Tailwind CSS. It uses Tailwind utili
 * Defines the `dnb-colorpalette` custom element.
 * Reads palette colors from the inner text content of the component.
 * Supports one color per line with a configurable parser format attribute.
-* Accepts any CSS color value supported by the current browser, including hex values, named colors, `rgb()`, `hsl()`, and newer CSS color functions when the browser supports them.
-* Trims empty lines.
-* Ignores lines that begin with `//`, `/*`, or `*` after trimming.
+* Accepts any CSS color value supported by the current browser, including hex values with alpha channels, named colors, `rgb()`, `rgba()`, `hsl()`, `hsla()`, and newer CSS color functions when the browser supports them.
+* Accepts CSS custom property declarations and SCSS variable declarations by extracting the color value after the declaration name.
+* Trims empty lines and optional trailing semicolons.
+* Ignores `//`, hash-space, and `/* ... */` comments, including inline and multiline block comments.
 * Renders one grid column for every parsed color.
 * Uses the color value as both the column background and visible label.
 * Gives every color column equal width with CSS grid.
@@ -92,20 +93,45 @@ The default format is `lines`:
 ```html
 <dnb-colorpalette format="lines">
   /* comments are skipped */
-  #f8fafc
-  // comments are skipped
-  rgb(15 23 42)
+  #f8fafc;
+  #0f172a # inline hash comments start when `#` is followed by whitespace
+  rgb(15 23 42) // inline slash comments are skipped
   blue
 </dnb-colorpalette>
 ```
 
 Rules for `format="lines"`:
 
+* Remove multiline and inline `/* ... */` block comments before line parsing.
 * Split inner text content by newline.
+* Remove inline `//` comments.
+* Remove hash comments where `#` is followed by whitespace, such as `# palette note` or `#0f172a # dark color`. Hex colors such as `#0f172a` are not treated as comments.
 * Trim each line.
 * Remove blank lines.
-* Remove lines that start with `//`, `/*`, or `*`.
+* Remove one optional trailing semicolon, so copied CSS and SCSS declarations work without editing.
+* Extract values from CSS custom property declarations such as `--brand: #0f172a;`.
+* Extract values from SCSS variable declarations such as `$brand: rgba(15, 23, 42, 1);`.
 * Keep lines that are valid CSS color values for the current browser.
+
+You can paste CSS custom property palettes directly:
+
+```html
+<dnb-colorpalette>
+  --prussian-blue: #001427ff;
+  --deep-teal: #708d81ff;
+  --jasmine: hsla(42, 82%, 75%, 1);
+</dnb-colorpalette>
+```
+
+You can also paste SCSS palettes:
+
+```html
+<dnb-colorpalette>
+  $prussian-blue: #001427ff;
+  $deep-teal: rgba(112, 141, 129, 1);
+  $jasmine: hsla(42, 82%, 75%, 1);
+</dnb-colorpalette>
+```
 
 Additional formats are planned, but not implemented yet.
 

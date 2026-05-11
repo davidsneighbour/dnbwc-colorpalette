@@ -125,16 +125,56 @@ export class DnbColorpalette extends HTMLElement {
       return [];
     }
 
-    return content
+    return DnbColorpalette.removeBlockComments(content)
       .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0)
-      .filter((line) => !DnbColorpalette.isComment(line))
-      .filter((line) => DnbColorpalette.isValidColor(line));
+      .map((line) => DnbColorpalette.parseColorLine(line))
+      .filter((color) => color.length > 0)
+      .filter((color) => DnbColorpalette.isValidColor(color));
   }
 
-  static isComment(line) {
-    return line.startsWith('//') || line.startsWith('/*') || line.startsWith('*');
+  static removeBlockComments(content) {
+    return content.replace(/\/\*[\s\S]*?\*\//g, '');
+  }
+
+  static parseColorLine(line) {
+    const withoutComments = DnbColorpalette.removeLineComment(line).trim();
+
+    if (!withoutComments) {
+      return '';
+    }
+
+    const declaration = withoutComments.match(/^(?:--[\w-]+|\$[\w-]+)\s*:\s*(.+)$/u);
+    const color = declaration ? declaration[1] : withoutComments;
+
+    return color.replace(/;\s*$/u, '').trim();
+  }
+
+  static removeLineComment(line) {
+    const commentIndex = DnbColorpalette.findLineCommentIndex(line);
+
+    if (commentIndex === -1) {
+      return line;
+    }
+
+    return line.slice(0, commentIndex);
+  }
+
+  static findLineCommentIndex(line) {
+    const slashCommentIndex = line.indexOf('//');
+    const hashCommentMatch = /(^|\s)#\s/u.exec(line);
+    const hashCommentIndex = hashCommentMatch
+      ? hashCommentMatch.index + hashCommentMatch[1].length
+      : -1;
+
+    if (slashCommentIndex === -1) {
+      return hashCommentIndex;
+    }
+
+    if (hashCommentIndex === -1) {
+      return slashCommentIndex;
+    }
+
+    return Math.min(slashCommentIndex, hashCommentIndex);
   }
 
   static isValidColor(color) {

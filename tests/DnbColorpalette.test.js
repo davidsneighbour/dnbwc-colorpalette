@@ -33,6 +33,140 @@ describe('DnbColorpalette', () => {
     expect(colors).toEqual(['#abc', 'tomato']);
   });
 
+  it('parses normal hex colors from TODO examples', () => {
+    const colors = DnbColorpalette.parseColors(`
+      #001427
+      #708d81
+      #f4d58d
+      #bf0603
+      #8d0801
+    `);
+
+    expect(colors).toEqual(['#001427', '#708d81', '#f4d58d', '#bf0603', '#8d0801']);
+  });
+
+  it('parses eight-digit hex colors with opacity from TODO examples', () => {
+    const colors = DnbColorpalette.parseColors(`
+      #001427ff
+      #708d81ff
+      #f4d58dff
+      #bf0603ff
+      #8d0801ff
+    `);
+
+    expect(colors).toEqual(['#001427ff', '#708d81ff', '#f4d58dff', '#bf0603ff', '#8d0801ff']);
+  });
+
+  it('parses colors with semicolons and inline comments', () => {
+    const colors = DnbColorpalette.parseColors(`
+      #001427ff;
+      #708d81ff // second color
+      #f4d58dff; # third color
+      #bf0603ff /* another color */
+      /* and now the last color
+      with a multiline comment */
+      #8d0801ff
+    `);
+
+    expect(colors).toEqual(['#001427ff', '#708d81ff', '#f4d58dff', '#bf0603ff', '#8d0801ff']);
+  });
+
+  it('parses CSS custom property color declarations', () => {
+    const colors = DnbColorpalette.parseColors(`
+      --prussian-blue: #001427ff;
+      --deep-teal: #708d81ff;
+      --jasmine: #f4d58dff;
+      --brick-ember: #bf0603ff;
+      --blood-red: #8d0801ff;
+    `);
+
+    expect(colors).toEqual(['#001427ff', '#708d81ff', '#f4d58dff', '#bf0603ff', '#8d0801ff']);
+  });
+
+  it('parses HSL CSS custom property color declarations', () => {
+    const colors = DnbColorpalette.parseColors(`
+      /* CSS HSL */
+      --prussian-blue: hsla(209, 100%, 8%, 1);
+      --deep-teal: hsla(155, 11%, 50%, 1);
+      --jasmine: hsla(42, 82%, 75%, 1);
+      --brick-ember: hsla(1, 97%, 38%, 1);
+      --blood-red: hsla(3, 99%, 28%, 1);
+    `);
+
+    expect(colors).toEqual([
+      'hsla(209, 100%, 8%, 1)',
+      'hsla(155, 11%, 50%, 1)',
+      'hsla(42, 82%, 75%, 1)',
+      'hsla(1, 97%, 38%, 1)',
+      'hsla(3, 99%, 28%, 1)',
+    ]);
+  });
+
+  it('parses SCSS hex color declarations', () => {
+    const colors = DnbColorpalette.parseColors(`
+      /* SCSS HEX */
+      $prussian-blue: #001427ff;
+      $deep-teal: #708d81ff;
+      $jasmine: #f4d58dff;
+      $brick-ember: #bf0603ff;
+      $blood-red: #8d0801ff;
+    `);
+
+    expect(colors).toEqual(['#001427ff', '#708d81ff', '#f4d58dff', '#bf0603ff', '#8d0801ff']);
+  });
+
+  it('parses SCSS HSL color declarations', () => {
+    const colors = DnbColorpalette.parseColors(`
+      /* SCSS HSL */
+      $prussian-blue: hsla(209, 100%, 8%, 1);
+      $deep-teal: hsla(155, 11%, 50%, 1);
+      $jasmine: hsla(42, 82%, 75%, 1);
+      $brick-ember: hsla(1, 97%, 38%, 1);
+      $blood-red: hsla(3, 99%, 28%, 1);
+    `);
+
+    expect(colors).toEqual([
+      'hsla(209, 100%, 8%, 1)',
+      'hsla(155, 11%, 50%, 1)',
+      'hsla(42, 82%, 75%, 1)',
+      'hsla(1, 97%, 38%, 1)',
+      'hsla(3, 99%, 28%, 1)',
+    ]);
+  });
+
+  it('parses SCSS RGBA color declarations', () => {
+    const colors = DnbColorpalette.parseColors(`
+      /* SCSS RGB */
+      $prussian-blue: rgba(0, 20, 39, 1);
+      $deep-teal: rgba(112, 141, 129, 1);
+      $jasmine: rgba(244, 213, 141, 1);
+      $brick-ember: rgba(191, 6, 3, 1);
+      $blood-red: rgba(141, 8, 1, 1);
+    `);
+
+    expect(colors).toEqual([
+      'rgba(0, 20, 39, 1)',
+      'rgba(112, 141, 129, 1)',
+      'rgba(244, 213, 141, 1)',
+      'rgba(191, 6, 3, 1)',
+      'rgba(141, 8, 1, 1)',
+    ]);
+  });
+
+  it('parses supported comment types without treating hex colors as comments', () => {
+    const colors = DnbColorpalette.parseColors(`
+      # palette note
+      // design note
+      /* another note
+      with more text */
+      #001427
+      #708d81 # muted teal
+      #f4d58d // jasmine
+    `);
+
+    expect(colors).toEqual(['#001427', '#708d81', '#f4d58d']);
+  });
+
   it('renders one equal grid column for every parsed color', async () => {
     document.body.innerHTML = `
       <dnb-colorpalette min-column-width="4rem">
