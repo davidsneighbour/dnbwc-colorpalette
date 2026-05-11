@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>dnb-colorpalette dist test page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="./dist/dnb-colorpalette.js"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased">
+    <main class="mx-auto flex min-h-screen max-w-5xl flex-col gap-10 px-6 py-10">
+      <header class="space-y-3">
+        <p class="text-sm font-semibold uppercase tracking-wide text-sky-700">Dist test page</p>
+        <h1 class="text-4xl font-bold tracking-tight">dnb-colorpalette examples</h1>
+        <p class="max-w-3xl text-lg text-slate-600">
+          This page loads Tailwind from the CDN and imports only the distributable component bundle from
+          <code class="rounded bg-slate-200 px-1 py-0.5 text-sm">./dist/dnb-colorpalette.js</code>.
+          Run <code class="rounded bg-slate-200 px-1 py-0.5 text-sm">npm run build</code> before opening it.
+        </p>
+      </header>
+
+      <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <div class="mb-4 space-y-1">
+          <h2 class="text-2xl font-semibold">Default palette</h2>
+          <p class="text-slate-600">A simple palette with one CSS color value per line.</p>
+        </div>
+        <dnb-colorpalette min-height="160px">
+          #0f172a
+          #2563eb
+          hsl(142 71% 45%)
+          gold
+          tomato
+        </dnb-colorpalette>
+      </section>
+
+      <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <div class="mb-4 space-y-1">
+          <h2 class="text-2xl font-semibold">Centered palette with copy button</h2>
+          <p class="text-slate-600">
+            This example uses layout attributes, a custom border, comments in the input, and the optional copy button.
+          </p>
+        </div>
+        <dnb-colorpalette
+          outer-class="mx-auto"
+          max-width="42rem"
+          min-column-width="6rem"
+          min-height="120px"
+          border-class="border-2 border-slate-800"
+          copy
+          copy-label="Copy brand palette"
+        >
+          // Brand neutrals and accents
+          oklch(22% 0.04 260)
+          oklch(62% 0.17 252)
+          oklch(72% 0.15 145)
+          oklch(83% 0.17 84)
+        </dnb-colorpalette>
+      </section>
+    </main>
+  </body>
+</html>
