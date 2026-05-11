@@ -2,6 +2,7 @@
 
 `dnb-colorpalette` renders a palette from color values pasted into the custom element.
 The default `lines` parser accepts plain CSS color lines and common CSS/SCSS palette snippets.
+The examples below use the same palette values listed in `tests/color-palette.json`.
 
 ## Supported pasted palette formats
 
@@ -9,10 +10,11 @@ The default `lines` parser accepts plain CSS color lines and common CSS/SCSS pal
 
 ```html
 <dnb-colorpalette>
-  #001427
+  #001427ff
   #708d81ff
-  hsl(42 82% 75%)
-  rgba(191, 6, 3, 1)
+  #f4d58dff
+  #bf0603ff
+  #8d0801ff
 </dnb-colorpalette>
 ```
 
@@ -24,7 +26,9 @@ Declaration names are stripped and the color value after the colon is rendered.
 <dnb-colorpalette>
   --prussian-blue: #001427ff;
   --deep-teal: #708d81ff;
-  --jasmine: hsla(42, 82%, 75%, 1);
+  --jasmine: #f4d58dff;
+  --brick-ember: #bf0603ff;
+  --blood-red: #8d0801ff;
 </dnb-colorpalette>
 ```
 
@@ -35,8 +39,10 @@ SCSS variable names are stripped the same way.
 ```html
 <dnb-colorpalette>
   $prussian-blue: #001427ff;
-  $deep-teal: rgba(112, 141, 129, 1);
-  $jasmine: hsla(42, 82%, 75%, 1);
+  $deep-teal: #708d81ff;
+  $jasmine: #f4d58dff;
+  $brick-ember: #bf0603ff;
+  $blood-red: #8d0801ff;
 </dnb-colorpalette>
 ```
 

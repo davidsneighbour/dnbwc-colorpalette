@@ -46,12 +46,15 @@ Then add one CSS color per line inside the component:
 
 ```html
 <dnb-colorpalette>
-  #0f172a
-  hsl(221 83% 53%)
-  rebeccapurple
-  tomato
+  #001427ff
+  #708d81ff
+  #f4d58dff
+  #bf0603ff
+  #8d0801ff
 </dnb-colorpalette>
 ```
+
+These examples mirror the shared development palette in `tests/color-palette.json`; update that JSON file to change test fixtures and the standalone test page palette.
 
 The rendered palette contains one equally sized column per color. Each column uses the input line as its CSS `background-color` value and as the visible label.
 
@@ -77,10 +80,11 @@ import '../scripts/colorpalette.js';
 ---
 
 <dnb-colorpalette outer-class="mx-auto" max-width="48rem">
-  #111827
-  oklch(70% 0.16 250)
-  hsl(142 71% 45%)
-  gold
+  #001427ff
+  #708d81ff
+  #f4d58dff
+  #bf0603ff
+  #8d0801ff
 </dnb-colorpalette>
 ```
 
@@ -93,10 +97,11 @@ The default format is `lines`:
 ```html
 <dnb-colorpalette format="lines">
   /* comments are skipped */
-  #f8fafc;
-  #0f172a # inline hash comments start when `#` is followed by whitespace
-  rgb(15 23 42) // inline slash comments are skipped
-  blue
+  #001427ff;
+  #708d81ff # inline hash comments start when `#` is followed by whitespace
+  #f4d58dff // inline slash comments are skipped
+  #bf0603ff
+  #8d0801ff
 </dnb-colorpalette>
 ```
 
@@ -119,7 +124,9 @@ You can paste CSS custom property palettes directly:
 <dnb-colorpalette>
   --prussian-blue: #001427ff;
   --deep-teal: #708d81ff;
-  --jasmine: hsla(42, 82%, 75%, 1);
+  --jasmine: #f4d58dff;
+  --brick-ember: #bf0603ff;
+  --blood-red: #8d0801ff;
 </dnb-colorpalette>
 ```
 
@@ -128,8 +135,10 @@ You can also paste SCSS palettes:
 ```html
 <dnb-colorpalette>
   $prussian-blue: #001427ff;
-  $deep-teal: rgba(112, 141, 129, 1);
-  $jasmine: hsla(42, 82%, 75%, 1);
+  $deep-teal: #708d81ff;
+  $jasmine: #f4d58dff;
+  $brick-ember: #bf0603ff;
+  $blood-red: #8d0801ff;
 </dnb-colorpalette>
 ```
 
@@ -170,10 +179,11 @@ Example with custom classes and sizing:
   max-height="16rem"
   border-class="border-2 border-slate-900"
 >
-  #020617
-  #2563eb
-  #22c55e
-  #facc15
+  #001427ff
+  #708d81ff
+  #f4d58dff
+  #bf0603ff
+  #8d0801ff
 </dnb-colorpalette>
 ```
 
@@ -183,9 +193,11 @@ Add the `copy` attribute to render a button that copies the parsed palette to th
 
 ```html
 <dnb-colorpalette copy copy-label="Copy this palette">
-  red
-  white
-  blue
+  #001427ff
+  #708d81ff
+  #f4d58dff
+  #bf0603ff
+  #8d0801ff
 </dnb-colorpalette>
 ```
 

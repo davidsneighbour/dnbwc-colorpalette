@@ -1,5 +1,17 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { DnbColorpalette } from '../src/DnbColorpalette.js';
+import {
+  lines,
+  paletteCssCustomProperties,
+  paletteCssHslCustomProperties,
+  paletteHexValues,
+  paletteHslaValues,
+  paletteRgbaValues,
+  paletteScssHexVariables,
+  paletteScssHslVariables,
+  paletteScssRgbaVariables,
+  paletteValues,
+} from './color-palette-fixtures.js';
 
 describe('DnbColorpalette', () => {
   beforeEach(() => {
@@ -11,168 +23,118 @@ describe('DnbColorpalette', () => {
   });
 
   it('parses one CSS color per line and trims empty lines', () => {
+    const [firstColor, secondColor, thirdColor] = paletteValues;
     const colors = DnbColorpalette.parseColors(`
-      #ff0000
+      ${firstColor}
 
-      hsl(120 100% 50%)
-      rebeccapurple
+      ${secondColor}
+      ${thirdColor}
     `);
 
-    expect(colors).toEqual(['#ff0000', 'hsl(120 100% 50%)', 'rebeccapurple']);
+    expect(colors).toEqual([firstColor, secondColor, thirdColor]);
   });
 
   it('ignores comment lines without treating hex colors as comments', () => {
+    const [firstColor, secondColor] = paletteHexValues;
     const colors = DnbColorpalette.parseColors(`
       // design note
       /* another note */
       * list note
-      #abc
-      tomato
+      ${firstColor}
+      ${secondColor}
     `);
 
-    expect(colors).toEqual(['#abc', 'tomato']);
+    expect(colors).toEqual([firstColor, secondColor]);
   });
 
-  it('parses normal hex colors from TODO examples', () => {
-    const colors = DnbColorpalette.parseColors(`
-      #001427
-      #708d81
-      #f4d58d
-      #bf0603
-      #8d0801
-    `);
+  it('parses normal hex colors from the shared test palette', () => {
+    const colors = DnbColorpalette.parseColors(lines(paletteHexValues));
 
-    expect(colors).toEqual(['#001427', '#708d81', '#f4d58d', '#bf0603', '#8d0801']);
+    expect(colors).toEqual(paletteHexValues);
   });
 
-  it('parses eight-digit hex colors with opacity from TODO examples', () => {
-    const colors = DnbColorpalette.parseColors(`
-      #001427ff
-      #708d81ff
-      #f4d58dff
-      #bf0603ff
-      #8d0801ff
-    `);
+  it('parses eight-digit hex colors with opacity from the shared test palette', () => {
+    const colors = DnbColorpalette.parseColors(lines(paletteValues));
 
-    expect(colors).toEqual(['#001427ff', '#708d81ff', '#f4d58dff', '#bf0603ff', '#8d0801ff']);
+    expect(colors).toEqual(paletteValues);
   });
 
   it('parses colors with semicolons and inline comments', () => {
+    const [firstColor, secondColor, thirdColor, fourthColor, fifthColor] = paletteValues;
     const colors = DnbColorpalette.parseColors(`
-      #001427ff;
-      #708d81ff // second color
-      #f4d58dff; # third color
-      #bf0603ff /* another color */
+      ${firstColor};
+      ${secondColor} // second color
+      ${thirdColor}; # third color
+      ${fourthColor} /* another color */
       /* and now the last color
       with a multiline comment */
-      #8d0801ff
+      ${fifthColor}
     `);
 
-    expect(colors).toEqual(['#001427ff', '#708d81ff', '#f4d58dff', '#bf0603ff', '#8d0801ff']);
+    expect(colors).toEqual(paletteValues);
   });
 
   it('parses CSS custom property color declarations', () => {
-    const colors = DnbColorpalette.parseColors(`
-      --prussian-blue: #001427ff;
-      --deep-teal: #708d81ff;
-      --jasmine: #f4d58dff;
-      --brick-ember: #bf0603ff;
-      --blood-red: #8d0801ff;
-    `);
+    const colors = DnbColorpalette.parseColors(lines(paletteCssCustomProperties));
 
-    expect(colors).toEqual(['#001427ff', '#708d81ff', '#f4d58dff', '#bf0603ff', '#8d0801ff']);
+    expect(colors).toEqual(paletteValues);
   });
 
   it('parses HSL CSS custom property color declarations', () => {
     const colors = DnbColorpalette.parseColors(`
       /* CSS HSL */
-      --prussian-blue: hsla(209, 100%, 8%, 1);
-      --deep-teal: hsla(155, 11%, 50%, 1);
-      --jasmine: hsla(42, 82%, 75%, 1);
-      --brick-ember: hsla(1, 97%, 38%, 1);
-      --blood-red: hsla(3, 99%, 28%, 1);
+      ${lines(paletteCssHslCustomProperties)}
     `);
 
-    expect(colors).toEqual([
-      'hsla(209, 100%, 8%, 1)',
-      'hsla(155, 11%, 50%, 1)',
-      'hsla(42, 82%, 75%, 1)',
-      'hsla(1, 97%, 38%, 1)',
-      'hsla(3, 99%, 28%, 1)',
-    ]);
+    expect(colors).toEqual(paletteHslaValues);
   });
 
   it('parses SCSS hex color declarations', () => {
     const colors = DnbColorpalette.parseColors(`
       /* SCSS HEX */
-      $prussian-blue: #001427ff;
-      $deep-teal: #708d81ff;
-      $jasmine: #f4d58dff;
-      $brick-ember: #bf0603ff;
-      $blood-red: #8d0801ff;
+      ${lines(paletteScssHexVariables)}
     `);
 
-    expect(colors).toEqual(['#001427ff', '#708d81ff', '#f4d58dff', '#bf0603ff', '#8d0801ff']);
+    expect(colors).toEqual(paletteValues);
   });
 
   it('parses SCSS HSL color declarations', () => {
     const colors = DnbColorpalette.parseColors(`
       /* SCSS HSL */
-      $prussian-blue: hsla(209, 100%, 8%, 1);
-      $deep-teal: hsla(155, 11%, 50%, 1);
-      $jasmine: hsla(42, 82%, 75%, 1);
-      $brick-ember: hsla(1, 97%, 38%, 1);
-      $blood-red: hsla(3, 99%, 28%, 1);
+      ${lines(paletteScssHslVariables)}
     `);
 
-    expect(colors).toEqual([
-      'hsla(209, 100%, 8%, 1)',
-      'hsla(155, 11%, 50%, 1)',
-      'hsla(42, 82%, 75%, 1)',
-      'hsla(1, 97%, 38%, 1)',
-      'hsla(3, 99%, 28%, 1)',
-    ]);
+    expect(colors).toEqual(paletteHslaValues);
   });
 
   it('parses SCSS RGBA color declarations', () => {
     const colors = DnbColorpalette.parseColors(`
       /* SCSS RGB */
-      $prussian-blue: rgba(0, 20, 39, 1);
-      $deep-teal: rgba(112, 141, 129, 1);
-      $jasmine: rgba(244, 213, 141, 1);
-      $brick-ember: rgba(191, 6, 3, 1);
-      $blood-red: rgba(141, 8, 1, 1);
+      ${lines(paletteScssRgbaVariables)}
     `);
 
-    expect(colors).toEqual([
-      'rgba(0, 20, 39, 1)',
-      'rgba(112, 141, 129, 1)',
-      'rgba(244, 213, 141, 1)',
-      'rgba(191, 6, 3, 1)',
-      'rgba(141, 8, 1, 1)',
-    ]);
+    expect(colors).toEqual(paletteRgbaValues);
   });
 
   it('parses supported comment types without treating hex colors as comments', () => {
+    const [firstColor, secondColor, thirdColor] = paletteHexValues;
     const colors = DnbColorpalette.parseColors(`
       # palette note
       // design note
       /* another note
       with more text */
-      #001427
-      #708d81 # muted teal
-      #f4d58d // jasmine
+      ${firstColor}
+      ${secondColor} # muted teal
+      ${thirdColor} // jasmine
     `);
 
-    expect(colors).toEqual(['#001427', '#708d81', '#f4d58d']);
+    expect(colors).toEqual([firstColor, secondColor, thirdColor]);
   });
 
   it('renders one equal grid column for every parsed color', async () => {
     document.body.innerHTML = `
       <dnb-colorpalette min-column-width="4rem">
-        #ff0000
-        rgb(0 255 0)
-        blue
+        ${lines(paletteValues)}
       </dnb-colorpalette>
     `;
 
@@ -183,17 +145,9 @@ describe('DnbColorpalette', () => {
     const columns = element.querySelectorAll('[data-color]');
 
     expect(grid.getAttribute('style')).toContain('min-height: 50px');
-    expect(columns).toHaveLength(3);
-    expect(Array.from(columns).map((column) => column.dataset.color)).toEqual([
-      '#ff0000',
-      'rgb(0 255 0)',
-      'blue',
-    ]);
-    expect(Array.from(columns).map((column) => column.textContent)).toEqual([
-      '#ff0000',
-      'rgb(0 255 0)',
-      'blue',
-    ]);
+    expect(columns).toHaveLength(paletteValues.length);
+    expect(Array.from(columns).map((column) => column.dataset.color)).toEqual(paletteValues);
+    expect(Array.from(columns).map((column) => column.textContent)).toEqual(paletteValues);
   });
 
   it('applies configurable container, size, and border attributes', async () => {
@@ -205,7 +159,7 @@ describe('DnbColorpalette', () => {
         max-height="12rem"
         border-class="border-4 border-black"
       >
-        gold
+        ${paletteValues[0]}
       </dnb-colorpalette>
     `;
 
@@ -231,9 +185,7 @@ describe('DnbColorpalette', () => {
 
     document.body.innerHTML = `
       <dnb-colorpalette copy copy-label="Copy colors">
-        red
-        white
-        blue
+        ${lines(paletteValues)}
       </dnb-colorpalette>
     `;
 
@@ -247,7 +199,7 @@ describe('DnbColorpalette', () => {
     button.click();
     await Promise.resolve();
 
-    expect(writeText).toHaveBeenCalledWith('red\nwhite\nblue');
+    expect(writeText).toHaveBeenCalledWith(lines(paletteValues));
 
     vi.unstubAllGlobals();
   });

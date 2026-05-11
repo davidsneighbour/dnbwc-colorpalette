@@ -6,6 +6,22 @@
     <title>dnb-colorpalette dist test page</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="./dist/dnb-colorpalette.js"></script>
+    <script type="module">
+      const paletteResponse = await fetch('./tests/color-palette.json');
+      const colorPalette = await paletteResponse.json();
+      const paletteLines = colorPalette.map(({ value }) => value).join('\n');
+      const propertyLines = colorPalette
+        .map(({ label, value }) => `--${label}: ${value};`)
+        .join('\n');
+
+      for (const paletteSource of document.querySelectorAll('[data-color-palette-source="values"]')) {
+        paletteSource.textContent = `\n${paletteLines}\n        `;
+      }
+
+      for (const paletteSource of document.querySelectorAll('[data-color-palette-source="properties"]')) {
+        paletteSource.textContent = `\n// Values loaded from tests/color-palette.json\n${propertyLines}\n        `;
+      }
+    </script>
   </head>
   <body class="bg-slate-50 text-slate-900 antialiased">
     <main class="mx-auto flex min-h-screen max-w-5xl flex-col gap-10 px-6 py-10">
@@ -26,13 +42,7 @@
           <h2 class="text-2xl font-semibold">Default palette</h2>
           <p class="text-slate-600">A simple palette with one CSS color value per line.</p>
         </div>
-        <dnb-colorpalette min-height="160px">
-#0f172a
-#2563eb
-hsl(142 71% 45%)
-gold
-tomato
-        </dnb-colorpalette>
+        <dnb-colorpalette data-color-palette-source="values" min-height="160px"></dnb-colorpalette>
       </section>
 
       <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
@@ -50,13 +60,8 @@ tomato
           border-class="border-2 border-slate-800"
           copy
           copy-label="Copy brand palette"
-        >
-// Brand neutrals and accents
-oklch(22% 0.04 260)
-oklch(62% 0.17 252)
-oklch(72% 0.15 145)
-oklch(83% 0.17 84)
-        </dnb-colorpalette>
+          data-color-palette-source="properties"
+        ></dnb-colorpalette>
       </section>
     </main>
   </body>
