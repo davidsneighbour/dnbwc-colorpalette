@@ -1,0 +1,32 @@
+{
+  "name": "@davidsneighbour/dnbwc-colorpalette",
+  "version": "1.0.7",
+  "dependencies": {
+    "@rollup/plugin-terser": "1.0.0",
+    "postcss-html": "1.8.1",
+    "stylelint-config-standard": "40.0.0"
+  },
+  "devDependencies": {
+    "eslint": "10.3.0",
+    "jsdom": "29.1.1",
+    "markdownlint-cli": "0.48.0",
+    "rollup": "4.60.3",
+    "stylelint": "17.11.0",
+    "vitest": "4.1.5"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "lint": "eslint ./src && stylelint '**/*.css' && markdownlint .",
+    "release": "node ./scripts/release.mjs",
+    "test": "vitest run"
+  },
+  "main": "./dist/dnb-colorpalette.js",
+  "type": "module",
+  "description": "A stylable web component that renders color palettes from light DOM content.",
+  "exports": "./dist/dnb-colorpalette.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ]
+}
